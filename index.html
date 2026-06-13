@@ -168,8 +168,8 @@
 
     <div id="screen-1" class="screen active">
         <h1>Vợ có đồng ý đi chơi với chồng không? 🥺❤️</h1>
-        <button onclick="nextScreen(2)">Cóooo, toi đồng ý!</button>
-        <button id="btn-no" class="btn-outline" onmouseover="moveNoButton()" onclick="moveNoButton()">oh noooo</button>
+        <button id="btn-yes" onclick="nextScreen(2)">Cóooo, toi đồng ý!</button>
+        <button  id="btn-no"  id="btn-no" class="btn-outline" onmouseover="moveNoButton()" onclick="moveNoButton()">oh noooo</button>
     </div>
 
     <div id="screen-2" class="screen">
@@ -241,20 +241,58 @@
         }
 
         // Hiệu ứng nút chạy trốn
-        function moveNoButton() {
-            const btn = document.getElementById('btn-no');
-            // Tính toán vị trí ngẫu nhiên trong khoảng an toàn của màn hình
-            const maxX = window.innerWidth - btn.offsetWidth - 20;
-            const maxY = window.innerHeight - btn.offsetHeight - 20;
+        // function moveNoButton() {
+        //     const btn = document.getElementById('btn-no');
+        //     // Tính toán vị trí ngẫu nhiên trong khoảng an toàn của màn hình
+        //     const maxX = window.innerWidth - btn.offsetWidth - 20;
+        //     const maxY = window.innerHeight - btn.offsetHeight - 20;
             
-            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+        //     const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+        //     const randomY = Math.max(10, Math.floor(Math.random() * maxY));
             
-            btn.style.position = 'fixed';
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
+        //     btn.style.position = 'fixed';
+        //     btn.style.left = randomX + 'px';
+        //     btn.style.top = randomY + 'px';
+        // }
+// Hiệu ứng nút chạy trốn có kiểm tra va chạm
+function moveNoButton() {
+    const btnNo = document.getElementById('btn-no');
+    const btnYes = document.getElementById('btn-yes'); 
+    
+    // Lấy tọa độ và kích thước hiện tại của nút "Đồng ý"
+    const yesRect = btnYes.getBoundingClientRect();
+    
+    const maxX = window.innerWidth - btnNo.offsetWidth - 20;
+    const maxY = window.innerHeight - btnNo.offsetHeight - 20;
+    
+    let randomX, randomY;
+    let isOverlapping = true;
+    let attempts = 0;
+    
+    // Vòng lặp tìm vị trí mới (thử tối đa 50 lần để tránh treo trình duyệt)
+    while (isOverlapping && attempts < 50) {
+        randomX = Math.max(10, Math.floor(Math.random() * maxX));
+        randomY = Math.max(10, Math.floor(Math.random() * maxY));
+        
+        // Vùng không gian của nút "Không" tại vị trí dự kiến
+        const noRight = randomX + btnNo.offsetWidth;
+        const noBottom = randomY + btnNo.offsetHeight;
+        
+        // Kiểm tra xem có đè lên nút "Đồng ý" không (cộng thêm 15px padding cho an toàn)
+        const padding = 15;
+        const overlapX = randomX < (yesRect.right + padding) && noRight > (yesRect.left - padding);
+        const overlapY = randomY < (yesRect.bottom + padding) && noBottom > (yesRect.top - padding);
+        
+        if (!(overlapX && overlapY)) {
+            isOverlapping = false; // Nếu không đè lên nhau thì chốt tọa độ này
         }
-
+        attempts++;
+    }
+    
+    btnNo.style.position = 'fixed';
+    btnNo.style.left = randomX + 'px';
+    btnNo.style.top = randomY + 'px';
+}
         // Mô phỏng tin nhắn
         const messages = [
             { type: 'received', text: 'Cậu làm xong hết mấy bài test rồi à?' },

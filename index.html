@@ -1,179 +1,304 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❤️ Gửi Vợ iu Ngọc Huyền ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Cậu... ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #ffe6e6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
 
-body{
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-    font-family:'Segoe UI',sans-serif;
-}
+        /* Thanh tiến độ */
+        #progress-container {
+            position: absolute;
+            top: 20px;
+            width: 80%;
+            max-width: 400px;
+            height: 10px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-.container{
-    text-align:center;
-    z-index:10;
-}
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #ff4d4d;
+            transition: width 0.5s ease-in-out;
+        }
 
-h1{
-    color:white;
-    font-size:42px;
-    margin-bottom:20px;
-    text-shadow:0 0 15px rgba(255,255,255,.8);
-}
+        /* Các màn hình */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(255, 77, 77, 0.15);
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-p{
-    color:white;
-    font-size:22px;
-    margin-bottom:30px;
-}
+        .screen.active {
+            display: flex;
+        }
 
-.btn-group{
-    display:flex;
-    gap:20px;
-    justify-content:center;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-button{
-    border:none;
-    cursor:pointer;
-    padding:15px 35px;
-    border-radius:50px;
-    font-size:20px;
-    transition:.3s;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
+        h1 {
+            color: #ff4d4d;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-#yes{
-    background:#ff3366;
-    color:white;
-}
+        /* Nút bấm */
+        button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            width: 100%;
+            max-width: 250px;
+        }
 
-#yes:hover{
-    transform:scale(1.1);
-}
+        button:hover {
+            background-color: #ff1a1a;
+            transform: scale(1.05);
+        }
 
-#no{
-    background:white;
-    color:#ff3366;
-}
+        .btn-outline {
+            background-color: white;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+        }
 
-.heart{
-    position:fixed;
-    color:red;
-    font-size:30px;
-    animation:float 4s linear forwards;
-    pointer-events:none;
-}
+        /* Messenger giả lập */
+        .chat-container {
+            width: 100%;
+            height: 250px;
+            background: #f0f2f5;
+            border-radius: 15px;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-@keyframes float{
-    0%{
-        transform:translateY(0) scale(0);
-        opacity:1;
-    }
-    100%{
-        transform:translateY(-800px) scale(2);
-        opacity:0;
-    }
-}
+        .msg {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            opacity: 0;
+            animation: popIn 0.3s forwards;
+        }
 
-.success{
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    background:rgba(255,192,203,.95);
-    z-index:999;
-}
+        .msg.received {
+            background: #e4e6eb;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
 
-.success h2{
-    font-size:50px;
-    color:#ff0066;
-    margin-bottom:20px;
-}
+        .msg.sent {
+            background: #ff4d4d;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
 
-.success p{
-    color:#d60052;
-    font-size:24px;
-}
-</style>
+        @keyframes popIn {
+            to { opacity: 1; }
+        }
+
+        /* Form Hợp đồng */
+        input[type="text"], input[type="date"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .contract-text {
+            font-size: 14px;
+            text-align: left;
+            background: #fff9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed #ff4d4d;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-    <h1>❤️ Em đồng ý cho anh so vu nhaaa ❤️</h1>
-    <p>Anh đã suy nghĩ rất lâu mới dám hỏi điều này 🥺</p>
-
-    <div class="btn-group">
-        <button id="yes">Đồng Ý ❤️</button>
-        <button id="no">Không 😢</button>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
     </div>
-</div>
 
-<div class="success" id="success">
-    <h2>Oh yeahhh ❤️❤️❤️</h2>
-    <p>Anh iu emm 🥰</p>
-</div>
+    <div id="screen-1" class="screen active">
+        <h1>Cậu có đồng ý làm người yêu tớ không? 🥺❤️</h1>
+        <button onclick="nextScreen(2)">Cóooo, tớ đồng ý!</button>
+        <button id="btn-no" class="btn-outline" onmouseover="moveNoButton()" onclick="moveNoButton()">Không bao giờ</button>
+    </div>
 
-<script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const success = document.getElementById("success");
+    <div id="screen-2" class="screen">
+        <h1>Yeahhh! Hẹn hò thôi. Cậu muốn ăn gì nhỉ? 🍽️</h1>
+        <button onclick="nextScreen(3)">Gà xào bắp cải phô mai 🧀</button>
+        <button onclick="nextScreen(3)">Đi ăn lẩu nướng 🥘</button>
+        <button onclick="nextScreen(3)">Cậu chọn đi, tớ sao cũng được 😆</button>
+    </div>
 
-function moveButton(){
-    const maxX = window.innerWidth - noBtn.offsetWidth;
-    const maxY = window.innerHeight - noBtn.offsetHeight;
+    <div id="screen-3" class="screen">
+        <h1>Ăn xong rồi mình đi đâu tiếp? 🎬</h1>
+        <button onclick="nextScreen(4)">Đi xem phim ma 👻</button>
+        <button onclick="nextScreen(4)">Đi dạo lượn lờ hóng gió 🛵</button>
+    </div>
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    <div id="screen-4" class="screen">
+        <h1>Mini Game kiểm tra độ hiểu nhau xíu nha! 🕵️‍♀️</h1>
+        <p>Đố cậu biết tớ thích nhất điều gì ở cậu?</p>
+        <button class="btn-outline" onclick="alert('Sai rồiii, thử lại xem!')">Nụ cười của cậu</button>
+        <button class="btn-outline" onclick="alert('Cũng đúng nhưng chưa đủ nha!')">Sự dễ thương</button>
+        <button onclick="nextScreen(5)">Tất cả mọi thứ thuộc về cậu ❤️</button>
+    </div>
 
-    noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}
+    <div id="screen-5" class="screen">
+        <h1>Ting ting! Có tin nhắn mới 💬</h1>
+        <div class="chat-container" id="chat-box">
+            </div>
+        <button id="btn-chat-next" style="display: none;" onclick="nextScreen(6)">Mở khóa Hợp Đồng 📜</button>
+    </div>
 
-noBtn.addEventListener("mouseenter", moveButton);
-noBtn.addEventListener("click", moveButton);
+    <div id="screen-6" class="screen">
+        <h1>Hợp Đồng Tình Yêu ✍️</h1>
+        <div class="contract-text">
+            <b>Điều 1:</b> Bên A (Tớ) hứa sẽ luôn yêu thương và nhường nhịn Bên B.<br>
+            <b>Điều 2:</b> Bên B có quyền vô lý, Bên A phải có trách nhiệm dỗ dành.<br>
+            <b>Điều 3:</b> Hợp đồng có hiệu lực Vĩnh Viễn kể từ giây phút ký.
+        </div>
+        <input type="text" id="loverName" placeholder="Nhập tên bé yêu của tớ vào đây..." required>
+        <input type="date" id="dateStart">
+        <button onclick="signContract()">Ký Xác Nhận & Đóng Dấu 🔏</button>
+    </div>
 
-yesBtn.addEventListener("click", () => {
+    <div id="screen-7" class="screen">
+        <h1 style="font-size: 32px;">Thành Công rồiiiii! 🎉</h1>
+        <p>Chào mừng <b id="display-name"></b> đến với cuộc đời tớ! ❤️</p>
+        <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif" alt="Love" style="width:100%; border-radius:15px;">
+    </div>
 
-    success.style.display = "flex";
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
 
-    setInterval(() => {
-        const heart = document.createElement("div");
+        // Cập nhật thanh tiến độ
+        function updateProgress(step) {
+            const percent = ((step - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+        }
 
-        heart.className = "heart";
-        heart.innerHTML = "❤️";
+        // Chuyển màn hình
+        function nextScreen(step) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + step).classList.add('active');
+            updateProgress(step);
+            
+            if(step === 5) {
+                startChat();
+            }
+        }
 
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.bottom = "-50px";
-        heart.style.fontSize =
-            Math.random() * 40 + 20 + "px";
+        // Hiệu ứng nút chạy trốn
+        function moveNoButton() {
+            const btn = document.getElementById('btn-no');
+            // Tính toán vị trí ngẫu nhiên trong khoảng an toàn của màn hình
+            const maxX = window.innerWidth - btn.offsetWidth - 20;
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            
+            btn.style.position = 'fixed';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
 
-        document.body.appendChild(heart);
+        // Mô phỏng tin nhắn
+        const messages = [
+            { type: 'received', text: 'Cậu làm xong hết mấy bài test rồi à?' },
+            { type: 'sent', text: 'Tất nhiên, tớ đã chuẩn bị kỹ lắm đó 😘' },
+            { type: 'received', text: 'Thế giờ sao nữa?' },
+            { type: 'sent', text: 'Giờ thì... làm người yêu tớ nhé? ❤️' }
+        ];
 
-        setTimeout(() => {
-            heart.remove();
-        }, 4000);
+        function startChat() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = ''; // Clear cũ
+            let delay = 1000;
 
-    }, 100);
-});
-</script>
+            messages.forEach((msg, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = `msg ${msg.type}`;
+                    div.textContent = msg.text;
+                    chatBox.appendChild(div);
+                    chatBox.scrollTop = chatBox.scrollHeight;
 
+                    // Hiện nút next khi tin nhắn cuối cùng xuất hiện
+                    if (index === messages.length - 1) {
+                        setTimeout(() => {
+                            document.getElementById('btn-chat-next').style.display = 'block';
+                        }, 1000);
+                    }
+                }, delay);
+                delay += 1500; // Khoảng cách giữa các tin nhắn
+            });
+        }
+
+        // Ký hợp đồng
+        function signContract() {
+            const name = document.getElementById('loverName').value;
+            if(!name) {
+                alert("Ơ kìa chưa nhập tên mà đòi ký! 😤");
+                return;
+            }
+            document.getElementById('display-name').textContent = name;
+            nextScreen(7);
+        }
+
+        // Khởi tạo ngày hiện tại cho form
+        document.getElementById('dateStart').valueAsDate = new Date();
+    </script>
 </body>
 </html>
